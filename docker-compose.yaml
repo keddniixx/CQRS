@@ -1,0 +1,32 @@
+services:
+  postgres:
+    image: postgres:15.1-alpine
+    container_name: postgres
+    ports:
+      - "5437:5432"
+    environment:
+      - POSTGRES_DB=banking
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    networks:
+      - banking
+
+  c-service:
+    build:
+      context: .
+      dockerfile: ./c-service/Dockerfile
+    container_name: c-service
+    ports:
+      - "5555:5555"
+    environment:
+      - spring.datasource.url=jdbc:postgresql://postgres:5432/banking
+      - spring.datasource.username=postgres
+      - spring.datasource.password=postgres
+    depends_on:
+      - postgres
+    networks:
+      - banking
+
+networks:
+  banking:
+    driver: bridge
