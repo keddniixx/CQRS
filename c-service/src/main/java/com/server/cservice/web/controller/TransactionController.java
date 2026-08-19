@@ -1,7 +1,7 @@
 package com.server.cservice.web.controller;
 
 import com.server.cservice.domain.model.Transaction;
-import com.server.cservice.service.TransactionService;
+import com.server.cservice.service.command.TransactionCommandService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,16 +12,16 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class TransactionController {
 
-    private final TransactionService transactionService;
+    private final TransactionCommandService transactionCommandService;
 
     @PostMapping
     public void create(@RequestBody Transaction transaction) {
-        transactionService.create(transaction);
+        transactionCommandService.create(transaction);
     }
 
     @GetMapping("/{id}")
     public Transaction getById(@PathVariable UUID id) {
-        // Mock method for raw entity
+        // Query logic would be here
         return null;
     }
 }

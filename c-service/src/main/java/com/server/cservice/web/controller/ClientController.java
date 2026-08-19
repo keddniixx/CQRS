@@ -3,7 +3,8 @@ package com.server.cservice.web.controller;
 import com.server.cservice.domain.model.Account;
 import com.server.cservice.domain.model.Card;
 import com.server.cservice.domain.model.Client;
-import com.server.cservice.service.ClientService;
+import com.server.cservice.service.command.ClientCommandService;
+import com.server.cservice.service.query.ClientQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,27 +16,28 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ClientController {
 
-    private final ClientService clientService;
+    private final ClientCommandService clientCommandService;
+    private final ClientQueryService clientQueryService;
 
     @PostMapping
     public void create(@RequestBody Client client) {
-        clientService.create(client);
+        clientCommandService.create(client);
     }
 
     @GetMapping("/{id}")
     public Client getById(@PathVariable UUID id) {
-        return clientService.getById(id);
+        return clientQueryService.getById(id);
     }
 
     @GetMapping("/{id}/cards")
     public List<Card> getCardsById(@PathVariable UUID id) {
-        Client client = clientService.getById(id);
+        Client client = clientQueryService.getById(id);
         return client.getCards();
     }
 
     @GetMapping("/{id}/account")
     public Account getAccountById(@PathVariable UUID id) {
-        Client client = clientService.getById(id);
+        Client client = clientQueryService.getById(id);
         return client.getAccount();
     }
 }

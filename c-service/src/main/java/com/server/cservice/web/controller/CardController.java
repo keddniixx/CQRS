@@ -2,7 +2,8 @@ package com.server.cservice.web.controller;
 
 import com.server.cservice.domain.model.Card;
 import com.server.cservice.domain.model.Transaction;
-import com.server.cservice.service.CardService;
+import com.server.cservice.service.command.CardCommandService;
+import com.server.cservice.service.query.CardQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,21 +15,22 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class CardController {
 
-    private final CardService cardService;
+    private final CardCommandService cardCommandService;
+    private final CardQueryService cardQueryService;
 
     @PostMapping
     public void create(@RequestParam UUID clientId) {
-        cardService.createByClientId(clientId);
+        cardCommandService.createByClientId(clientId);
     }
 
     @GetMapping("/{id}")
     public Card getById(@PathVariable UUID id) {
-        return cardService.getById(id);
+        return cardQueryService.getById(id);
     }
 
     @GetMapping("/{id}/transactions")
     public List<Transaction> getTransactionsById(@PathVariable UUID id) {
-        Card card = cardService.getById(id);
+        Card card = cardQueryService.getById(id);
         return card.getTransactions();
     }
 }

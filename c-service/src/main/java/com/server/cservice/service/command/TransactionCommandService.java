@@ -1,25 +1,27 @@
-package com.server.cservice.service;
+package com.server.cservice.service.command;
+
 import com.server.cservice.domain.model.Card;
 import com.server.cservice.domain.model.Transaction;
 import com.server.cservice.repository.TransactionRepository;
+import com.server.cservice.service.query.CardQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class TransactionService {
+public class TransactionCommandService {
     private final TransactionRepository repository;
-    private final CardService cardService;
+    private final CardQueryService cardQueryService;
     
     @Transactional
     public void create(Transaction transaction) {
-        Card from = cardService.getByNumberAndDateAndCvv(
+        Card from = cardQueryService.getByNumberAndDateAndCvv(
             transaction.getFrom().getNumber(), 
             transaction.getFrom().getDate(), 
             transaction.getFrom().getCvv()
         );
-        Card to = cardService.getByNumberAndDate(
+        Card to = cardQueryService.getByNumberAndDate(
             transaction.getTo().getNumber(), 
             transaction.getTo().getDate()
         );

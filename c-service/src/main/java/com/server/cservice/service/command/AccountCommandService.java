@@ -1,4 +1,4 @@
-package com.server.cservice.service;
+package com.server.cservice.service.command;
 
 import com.server.cservice.domain.model.Account;
 import com.server.cservice.repository.AccountRepository;
@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class AccountService {
+public class AccountCommandService {
     private final AccountRepository repository;
     
     @Transactional
