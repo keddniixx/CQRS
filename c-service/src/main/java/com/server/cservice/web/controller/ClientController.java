@@ -7,6 +7,7 @@ import com.server.cservice.domain.model.Client;
 import com.server.cservice.service.command.ClientCommandService;
 import com.server.cservice.service.query.ClientQueryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,17 +32,20 @@ public class ClientController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
     public Client getById(@PathVariable UUID id) {
         return clientQueryService.getById(id);
     }
 
     @GetMapping("/{id}/cards")
+    @PreAuthorize("isAuthenticated()")
     public List<Card> getCardsById(@PathVariable UUID id) {
         Client client = clientQueryService.getById(id);
         return client.getCards();
     }
 
     @GetMapping("/{id}/account")
+    @PreAuthorize("isAuthenticated()")
     public Account getAccountById(@PathVariable UUID id) {
         Client client = clientQueryService.getById(id);
         return client.getAccount();

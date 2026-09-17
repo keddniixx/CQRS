@@ -5,6 +5,7 @@ import com.server.cservice.domain.model.Card;
 import com.server.cservice.domain.model.Transaction;
 import com.server.cservice.service.command.TransactionCommandService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +19,7 @@ public class TransactionController {
     private final TransactionCommandService transactionCommandService;
 
     @PostMapping
+    @PreAuthorize("isAuthenticated()")
     public void create(@Validated @RequestBody TransactionDto dto) {
         Transaction transaction = new Transaction();
         Card from = new Card();
@@ -37,6 +39,7 @@ public class TransactionController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
     public Transaction getById(@PathVariable UUID id) {
         return null;
     }

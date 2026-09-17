@@ -15,4 +15,8 @@ public class ClientQueryService {
     public Client getById(UUID id) {
         return repository.findById(id).orElseThrow(() -> new RuntimeException("Client not found"));
     }
+
+    public Client getByUsername(String username) {
+        return repository.findByUsername(username).orElseThrow(() -> new RuntimeException("Client not found"));
+    }
 }
