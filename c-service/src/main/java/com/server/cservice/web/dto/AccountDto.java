@@ -1,0 +1,28 @@
+package com.server.cservice.web.dto;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.math.BigDecimal;
+import java.util.UUID;
+
+@Getter
+@Setter
+public class AccountDto {
+
+    @NotNull(message = "Айди не должно быть налл",
+            groups = OnUpdate.class)
+    @Null(message = "Айди должно быть налл",
+            groups = OnCreate.class)
+    private UUID id;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private String number;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private BigDecimal balance;
+
+}

@@ -1,9 +1,13 @@
 package com.server.cservice.web.controller;
 
-import com.server.cservice.domain.dto.ClientDto;
+
+import com.server.common.domain.model.Client;
 import com.server.cservice.service.auth.AuthService;
-import com.server.cservice.web.dto.auth.LoginRequestDto;
-import com.server.cservice.web.dto.auth.LoginResponseDto;
+import com.server.cservice.web.dto.ClientDto;
+import com.server.cservice.web.dto.LoginRequestDto;
+import com.server.cservice.web.dto.LoginResponseDto;
+import com.server.cservice.web.dto.OnCreate;
+import com.server.cservice.web.dto.mapper.ClientMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,18 +18,28 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
+@Validated
 public class AuthController {
 
     private final AuthService authService;
+    private final ClientMapper clientMapper;
+
+
+
 
     @PostMapping("/register")
-    public void register(@Validated @RequestBody ClientDto clientDto) {
-        authService.register(clientDto);
+    public void register(
+            @RequestBody @Validated(OnCreate.class) final ClientDto dto
+    ){
+        Client client = clientMapper.fromDto(dto);
+        authService.register(client);
     }
 
     @PostMapping("/login")
-    public LoginResponseDto login(@Validated @RequestBody LoginRequestDto request) {
-        return authService.login(request);
-    }
+    public LoginResponseDto login(
+            @RequestBody @Validated final LoginRequestDto dto
+    ) {
+        return authService.login(dto);
 
+    }
 }

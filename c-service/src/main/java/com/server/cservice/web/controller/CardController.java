@@ -1,9 +1,13 @@
 package com.server.cservice.web.controller;
 
-import com.server.cservice.domain.model.Card;
-import com.server.cservice.domain.model.Transaction;
-import com.server.cservice.service.command.CardCommandService;
-import com.server.cservice.service.query.CardQueryService;
+import com.server.common.domain.model.Card;
+import com.server.cservice.service.card.CardService;
+import com.server.cservice.web.dto.CardDto;
+import com.server.cservice.web.dto.TransactionDto;
+import com.server.cservice.web.dto.mapper.CardMapper;
+import com.server.cservice.web.dto.mapper.TransactionMapper;
+import com.server.cservice.web.security.SecurityUser;
+import com.server.cservice.web.security.service.SecurityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -16,25 +20,35 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class CardController {
 
-    private final CardCommandService cardCommandService;
-    private final CardQueryService cardQueryService;
+    private final CardService cardService;
+    private final CardMapper cardMapper;
+    private final TransactionMapper transactionMapper;
+    private final SecurityService securityService;
+
 
     @PostMapping
-    @PreAuthorize("isAuthenticated()")
-    public void create(@RequestParam UUID clientId) {
-        cardCommandService.createByClientId(clientId);
+    public void create() {
+        SecurityUser user = securityService.getUserFromRequest();
+        cardService.createByClientId(user.getId());
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("isAuthenticated()")
-    public Card getById(@PathVariable UUID id) {
-        return cardQueryService.getById(id);
+    @PreAuthorize("@ssi.canAccessCard(#id)")
+    public CardDto getById(
+            @PathVariable final UUID id
+    ){
+        Card card = cardService.getById(id);
+        return cardMapper.toDto(card);
     }
 
+
     @GetMapping("/{id}/transactions")
-    @PreAuthorize("isAuthenticated()")
-    public List<Transaction> getTransactionsById(@PathVariable UUID id) {
-        Card card = cardQueryService.getById(id);
-        return card.getTransactions();
+    @PreAuthorize("@ssi.canAccessCard(#id)")
+    public List<TransactionDto> getTransactionsById(
+            @PathVariable final  UUID id
+    ){
+        Card card = cardService.getById(id);
+        return transactionMapper.toDto(card.getTransactions());
     }
+
 }

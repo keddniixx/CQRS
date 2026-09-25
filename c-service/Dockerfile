@@ -1,7 +1,7 @@
 FROM maven:3.9-eclipse-temurin-17-alpine AS builder
 WORKDIR /app
+COPY pom.xml /app/
 COPY c-service /app/c-service
-COPY pom.xml /app/pom.xml
 RUN cd /app/c-service && mvn clean package -DskipTests
 
 FROM eclipse-temurin:17-jre-alpine
