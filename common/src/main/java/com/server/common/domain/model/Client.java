@@ -17,7 +17,7 @@ import java.util.UUID;
 public class Client {
     @Id
     @GeneratedValue
-    @JdbcTypeCode(SqlTypes.VARCHAR)
+    @JdbcTypeCode(SqlTypes.UUID)
     private UUID id;
 
 

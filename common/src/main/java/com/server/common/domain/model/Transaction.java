@@ -18,7 +18,7 @@ public class Transaction {
 
     @Id
     @GeneratedValue
-    @JdbcTypeCode(SqlTypes.VARCHAR)
+    @JdbcTypeCode(SqlTypes.UUID)
     private UUID id;
 
 

@@ -25,7 +25,7 @@ public class Account {
 
     @Id
     @GeneratedValue
-    @JdbcTypeCode(SqlTypes.VARCHAR)
+    @JdbcTypeCode(SqlTypes.UUID)
     private UUID id;
 
     private String number;

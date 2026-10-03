@@ -21,7 +21,7 @@ public class Card {
 
     @Id
     @GeneratedValue
-    @JdbcTypeCode(SqlTypes.VARCHAR)
+    @JdbcTypeCode(SqlTypes.UUID)
     private UUID id;
 
     private String number;
