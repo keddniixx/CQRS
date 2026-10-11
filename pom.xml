@@ -16,6 +16,7 @@
     <modules>
         <module>common</module>
         <module>c-service</module>
+        <module>event-handler</module>
     </modules>
 
     <properties>
