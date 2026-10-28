@@ -1,0 +1,166 @@
+### Register Client 1
+POST http://localhost:5555/api/v1/auth/register
+Content-Type: application/json
+
+{
+  "name": "Alice Smith",
+  "username": "alice@example.com",
+  "password": "password123"
+}
+
+### Register Client 2
+POST http://localhost:5555/api/v1/auth/register
+Content-Type: application/json
+
+{
+  "name": "Bob Jones",
+  "username": "bob@example.com",
+  "password": "password123"
+}
+
+### Login Client 1
+POST http://localhost:5555/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "username": "alice@example.com",
+  "password": "password123"
+}
+
+> {%
+client.global.set("alice_token", response.body.access);
+client.global.set("alice_id", response.body.id);
+%}
+
+### Login Client 2
+POST http://localhost:5555/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "username": "bob@example.com",
+  "password": "password123"
+}
+
+> {%
+client.global.set("bob_token", response.body.access);
+client.global.set("bob_id", response.body.id);
+%}
+
+### Create Card Client 1
+POST http://localhost:5555/api/v1/cards
+Authorization: Bearer {{alice_token}}
+
+### Create Card Client 2
+POST http://localhost:5555/api/v1/cards
+Authorization: Bearer {{bob_token}}
+
+### Get Client 1
+GET http://localhost:5555/api/v1/clients/{{alice_id}}
+Authorization: Bearer {{alice_token}}
+
+### Get Client 1 Cards
+GET http://localhost:5555/api/v1/clients/{{alice_id}}/cards
+Authorization: Bearer {{alice_token}}
+
+### Get Client 1 Account
+GET http://localhost:5555/api/v1/clients/{{alice_id}}/account
+Authorization: Bearer {{alice_token}}
+
+### Get Client 2 Cards
+GET http://localhost:5555/api/v1/clients/{{bob_id}}/cards
+Authorization: Bearer {{bob_token}}
+
+### Valid Transaction
+POST http://localhost:5555/api/v1/transactions
+Authorization: Bearer {{alice_token}}
+Content-Type: application/json
+
+{
+  "from": {
+    "number": "ALICE_CARD_NUMBER",
+    "date": "ALICE_CARD_DATE",
+    "cvv": "ALICE_CARD_CVV"
+  },
+  "to": {
+    "number": "BOB_CARD_NUMBER",
+    "date": "BOB_CARD_DATE",
+    "cvv": "BOB_CARD_CVV"
+  },
+  "amount": 10.00
+}
+
+### Insufficient Funds Test
+POST http://localhost:5555/api/v1/transactions
+Authorization: Bearer {{alice_token}}
+Content-Type: application/json
+
+{
+  "from": {
+    "number": "ALICE_CARD_NUMBER",
+    "date": "ALICE_CARD_DATE",
+    "cvv": "ALICE_CARD_CVV"
+  },
+  "to": {
+    "number": "BOB_CARD_NUMBER",
+    "date": "BOB_CARD_DATE",
+    "cvv": "BOB_CARD_CVV"
+  },
+  "amount": 999999.00
+}
+
+### Non-existent Receiver Card Test
+POST http://localhost:5555/api/v1/transactions
+Authorization: Bearer {{alice_token}}
+Content-Type: application/json
+
+{
+  "from": {
+    "number": "ALICE_CARD_NUMBER",
+    "date": "ALICE_CARD_DATE",
+    "cvv": "ALICE_CARD_CVV"
+  },
+  "to": {
+    "number": "0000000000000000",
+    "date": "12/30",
+    "cvv": "999"
+  },
+  "amount": 10.00
+}
+
+### Negative Amount Test
+POST http://localhost:5555/api/v1/transactions
+Authorization: Bearer {{alice_token}}
+Content-Type: application/json
+
+{
+  "from": {
+    "number": "ALICE_CARD_NUMBER",
+    "date": "ALICE_CARD_DATE",
+    "cvv": "ALICE_CARD_CVV"
+  },
+  "to": {
+    "number": "BOB_CARD_NUMBER",
+    "date": "BOB_CARD_DATE",
+    "cvv": "BOB_CARD_CVV"
+  },
+  "amount": -50.00
+}
+
+### Unauthorized Access Test
+POST http://localhost:5555/api/v1/transactions
+Authorization: Bearer {{bob_token}}
+Content-Type: application/json
+
+{
+  "from": {
+    "number": "ALICE_CARD_NUMBER",
+    "date": "ALICE_CARD_DATE",
+    "cvv": "ALICE_CARD_CVV"
+  },
+  "to": {
+    "number": "BOB_CARD_NUMBER",
+    "date": "BOB_CARD_DATE",
+    "cvv": "BOB_CARD_CVV"
+  },
+  "amount": 10.00
+}
