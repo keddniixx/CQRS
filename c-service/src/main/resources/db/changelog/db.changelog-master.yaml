@@ -3,3 +3,5 @@ databaseChangeLog:
       file: db/changelog/changesets/001_create_tables.sql
   - include:
       file: db/changelog/changesets/002_add_indexes.sql
+  - include:
+      file: db/changelog/changesets/003_add_audit_logs.sql
